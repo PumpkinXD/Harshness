@@ -1,21 +1,19 @@
 {
-  "name": "electron-quick-start",
-  "version": "1.0.0",
-  "description": "A minimal Electron application",
+  "name": "Harshness",
+  "version": "0.1.0",
+  "description": "A DEMO",
   "main": "main.js",
   "scripts": {
     "start": "electron ."
   },
-  "repository": "https://github.com/electron/electron-quick-start",
+  "repository": "https://github.com/PumpkinXD/Harshness",
   "keywords": [
     "Electron",
-    "quick",
-    "start",
-    "tutorial",
+    "Discord",
     "demo"
   ],
-  "author": "GitHub",
-  "license": "CC0-1.0",
+  "author": "PumpkinXD",
+  "license": "GNU",
   "devDependencies": {
     "electron": "^31.3.1"
   }

@@ -2,6 +2,12 @@
 const { app, BrowserWindow } = require('electron')
 const path = require('node:path')
 
+app.commandLine.appendSwitch('host-rules', 'MAP discord.com dis1, MAP discordapp.com dis2, MAP discord.gg dis3')
+app.commandLine.appendSwitch('host-resolver-rules', 'MAP dis1 162.159.128.233, MAP dis2 162.159.129.233, MAP dis3 162.159.130.234')//https://www.diggui.com
+// app.commandLine.appendSwitch('test-type')
+app.commandLine.appendSwitch('ignore-certificate-errors')
+
+
 function createWindow () {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -12,8 +18,14 @@ function createWindow () {
     }
   })
 
+
+
+  mainWindow.maximize();
+  mainWindow.setAutoHideMenuBar(true);
+  mainWindow.loadURL('https://discord.com/channels/');
+
   // and load the index.html of the app.
-  mainWindow.loadFile('index.html')
+  // mainWindow.loadFile('index.html')
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
