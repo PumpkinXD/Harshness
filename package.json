@@ -4,7 +4,8 @@
   "description": "A DEMO",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "build": "electron-builder"
   },
   "repository": "https://github.com/PumpkinXD/Harshness",
   "keywords": [
@@ -15,6 +16,21 @@
   "author": "PumpkinXD",
   "license": "GNU",
   "devDependencies": {
-    "electron": "^32.0.2"
+    "electron": "^32.0.2",
+    "electron-builder": "^25.0.5"
+  },
+  "build": {
+    "productName": "Harshness",
+    "appId": "io.github.pumpkinxd.harshness",
+    "directories": {
+      "output": "build"
+    },
+    "linux": {
+      "category": "Network",
+      "target": "AppImage"
+    },
+    "win":{
+      "target": "nsis"
+    }
   }
 }
