@@ -5,15 +5,21 @@ const path = require('node:path')
 app.commandLine.appendSwitch('host-rules',
                              'MAP discord.com ez4dc,'
                              +'MAP discordapp.com ez4dc,'
+                             +'MAP cdn.discordapp.com ez4dc_cdn,'
+                             +'MAP images-ext-1.discordapp.net ez4dc_img_ext_1,'
                              +'MAP discord.gg ez4dc,'
                              +'MAP remote-auth-gateway.discord.gg ez4dc,'
+                             +'MAP gateway.discord.gg ez4dc_gateway,'
+                             +'MAP media.discordapp.net ez4dc_media,'
                              +'MAP *.hcaptcha.com ez4hcaptcha'//not working
                              )//https://nicebowl.fun/24_8
 app.commandLine.appendSwitch('host-resolver-rules',
-                             ' MAP ez4dc 162.159.138.232,'
-                             +' MAP dis2 162.159.129.233,'
-                             +' MAP ez4dc_3 162.159.130.234,'
-                             +' MAP ez4hcaptcha 104.19.230.21'//not working
+                             '  MAP ez4dc 162.159.138.232,'
+                             +' MAP ez4dc_cdn 162.159.130.233,'
+                             +' MAP ez4dc_gateway 162.159.133.234,'
+                             +' MAP ez4dc_img_ext_1 162.159.129.232,'
+                             +' MAP ez4dc_media 162.159.130.232,'
+                             +' MAP ez4hcaptcha 104.19.230.21'//not working(???)
                              // +' MAP api2.hcaptcha.com 104.19.230.21,'
                              // +' MAP hcaptcha.com 104.19.230.21,'
                              // +' MAP newassets.hcaptcha.com 104.19.230.21,'
