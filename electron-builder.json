@@ -1,0 +1,39 @@
+{
+    "appId": "io.github.pumpkinxd.harshness",
+    "productName": "Harshness",
+    "files": [
+        "package.json",
+        "main.js"
+    ],
+    "directories": {
+        "output": "build"
+    },
+    "linux": {
+        "target": [
+            {
+                "target": "AppImage"
+            }
+        ]
+    },
+    "win": {
+        "target": [
+            {
+                "target": "portable",
+                "arch": [
+                    "ia32",
+                    "x64"
+                ]
+            }
+        ]
+    },
+    "mac": {
+        "target": [
+            {
+                "target": "dmg",
+                "arch": [
+                    "universal"
+                ]
+            }
+        ]
+    }
+}
