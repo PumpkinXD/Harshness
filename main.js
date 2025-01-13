@@ -1,27 +1,30 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, session } = require('electron')
 const path = require('node:path')
 
+// 保留域前置配置
 app.commandLine.appendSwitch('host-rules',
                              'MAP discord.com ez4dc,'
                              +'MAP discordapp.com ez4dc,'
                              +'MAP discord.gg ez4dc,'
+                             +'MAP click.discord.com ez4dc,'
                              +'MAP remote-auth-gateway.discord.gg ez4dc,'
-                             +'MAP *.hcaptcha.com ez4hcaptcha'//not working
-                             )//https://nicebowl.fun/24_8
+                             +'MAP gateway.discord.gg ez4dc_gateway,'
+                             +'MAP cdn.discordapp.com ez4dc,'
+                             +'MAP wss://gateway.discord.gg ez4dc_gateway,'
+                             +'MAP status.discord.com ez4dc,'
+                             +'MAP *.hcaptcha.com ez4hcaptcha'
+                             )
 app.commandLine.appendSwitch('host-resolver-rules',
-                             ' MAP ez4dc 162.159.138.232,'
+                             ' MAP ez4dc 162.159.136.232,'
+                             +' MAP ez4dc_gateway 162.159.134.234,'
+                             +' MAP cdn_ez4dc 162.159.135.233,'
                              +' MAP dis2 162.159.129.233,'
                              +' MAP ez4dc_3 162.159.130.234,'
-                             +' MAP ez4hcaptcha 104.19.230.21'//not working
-                             // +' MAP api2.hcaptcha.com 104.19.230.21,'
-                             // +' MAP hcaptcha.com 104.19.230.21,'
-                             // +' MAP newassets.hcaptcha.com 104.19.230.21,'
-                             // +' MAP imgs.hcaptcha.com 104.19.230.21'
-                             )//https://www.diggui.com
+                             +' MAP ez4hcaptcha 104.19.230.21'
+                             )
 app.commandLine.appendSwitch('test-type')
 app.commandLine.appendSwitch('ignore-certificate-errors')
-
 
 function createWindow () {
   // Create the browser window.
@@ -29,22 +32,60 @@ function createWindow () {
     width: 800,
     height: 600,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js')
+      nodeIntegration: true, // 允许在渲染进程中使用 Node.js
+      contextIsolation: false, // 关闭上下文隔离
+      webviewTag: true,
+      webSecurity: false,  // 禁用 web 安全策略
+      allowRunningInsecureContent: true  // 允许不安全内容
     }
   })
 
+  // hCaptcha 请求拦截配置
+  const filter = {
+    urls: [
+      '*://*.hcaptcha.com/*',
+      'https://*.hcaptcha.com/*',
+      'http://*.hcaptcha.com/*'
+    ]
+  };
 
+  session.defaultSession.webRequest.onBeforeSendHeaders(
+    filter,
+    (details, callback) => {
+      const newHeaders = {
+        ...details.requestHeaders,
+        'Origin': 'https://newassets.hcaptcha.com',
+        'Referer': 'https://newassets.hcaptcha.com/',
+        'Host': new URL(details.url).host
+      };
+      callback({ requestHeaders: newHeaders });
+    }
+  );
+
+  session.defaultSession.webRequest.onHeadersReceived(
+    filter,
+    (details, callback) => {
+      const responseHeaders = {
+        ...details.responseHeaders,
+        'access-control-allow-origin': ['https://newassets.hcaptcha.com'],
+        'access-control-allow-methods': ['*'],
+        'access-control-allow-headers': ['*'],
+        'access-control-allow-credentials': ['true'],
+        'access-control-max-age': ['86400'],
+        'vary': ['Origin']
+      };
+
+      callback({ 
+        responseHeaders: responseHeaders,
+        statusLine: 'HTTP/1.1 200 OK'
+      });
+    }
+  );
 
   mainWindow.maximize();
   mainWindow.setAutoHideMenuBar(true);
-  mainWindow.loadURL('https://discord.com/app');
-  // mainWindow.loadURL('https://baidu.com');
-
-  // and load the index.html of the app.
-  // mainWindow.loadFile('index.html')
-
-  // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
+  mainWindow.loadFile('index.html');
+  mainWindow.webContents.openDevTools();
 }
 
 // This method will be called when Electron has finished
