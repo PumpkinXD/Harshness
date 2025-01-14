@@ -16,7 +16,7 @@
   "author": "PumpkinXD",
   "license": "GNU",
   "devDependencies": {
-    "electron": "^33.3.1",
+    "electron": "^34.0.0",
     "electron-builder": "^25.1.8"
   }
 }
