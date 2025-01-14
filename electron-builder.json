@@ -3,6 +3,10 @@
     "productName": "Harshness",
     "files": [
         "package.json",
+        "index.html",
+        "styles.css",
+        "preload.js",
+        "renderer.js",
         "main.js"
     ],
     "directories": {
@@ -10,9 +14,7 @@
     },
     "linux": {
         "target": [
-            {
-                "target": "AppImage"
-            }
+            "AppImage"
         ]
     },
     "win": {
