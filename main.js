@@ -1,5 +1,5 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow, ipcMain, dialog, shell } = require("electron");
 const path = require("node:path");
 
 app.commandLine.appendSwitch(
@@ -52,8 +52,8 @@ function createWindow() {
     height: 600,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
-      nodeIntegration: true,
-      contextIsolation: false,
+      nodeIntegration: false,
+      contextIsolation: true,
       webviewTag: true,
     },
   });
@@ -61,6 +61,9 @@ function createWindow() {
   mainWindow.maximize();
   mainWindow.setAutoHideMenuBar(true);
   mainWindow.loadFile("index.html");
+  
+  // Open the DevTools automatically
+  // mainWindow.webContents.openDevTools();
 }
 
 // This method will be called when Electron has finished
@@ -81,6 +84,47 @@ app.whenReady().then(() => {
 // explicitly with Cmd + Q.
 app.on("window-all-closed", function () {
   if (process.platform !== "darwin") app.quit();
+});
+
+// Add IPC handler for showing dialog
+ipcMain.handle('show-link-dialog', async (event, url) => {
+  console.log('Main process received show-link-dialog request:', url);
+  try {
+    const result = await dialog.showMessageBox({
+      type: 'question',
+      buttons: ['Yes', 'Copy to Clipboard', 'No'],
+      defaultId: 2,
+      title: 'External Link',
+      message: 'Are you sure you want to open the following website?',
+      detail: url + '\nNever open links from people that you don\'t trust!',
+      noLink: true,
+      cancelId: 2
+    });
+
+    console.log('Dialog result:', result);
+    
+    // Return corresponding action based on button index
+    const actions = ['open', 'copy', 'cancel'];
+    return {
+      action: actions[result.response]
+    };
+  } catch (error) {
+    console.error('Error showing dialog:', error);
+    throw error;
+  }
+});
+
+// Add IPC handler for opening external links
+ipcMain.handle('open-external', async (event, url) => {
+  console.log('Main process received open-external request:', url);
+  try {
+    await shell.openExternal(url);
+    console.log('Successfully opened in external browser:', url);
+    return true;
+  } catch (error) {
+    console.error('Failed to open in external browser:', error);
+    throw error;
+  }
 });
 
 // In this file you can include the rest of your app's specific main

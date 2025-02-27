@@ -6,6 +6,7 @@
         "index.html",
         "styles.css",
         "preload.js",
+        "webview-preload.js",
         "renderer.js",
         "main.js"
     ],

@@ -108,7 +108,12 @@
             </div>
         </div>
     </div>
-    <webview id="webview" src="https://discord.com/app"></webview>
+    <webview id="webview" 
+             src="https://discord.com/app"
+             preload="./webview-preload.js"
+             webpreferences="contextIsolation=false"
+             style="width: 100%; height: calc(100% - 45px); border: none;">
+    </webview>
 
     <script>
         const urlbar = document.getElementById('urlbar');
@@ -119,12 +124,15 @@
         webview.setAttribute('allowpopups', '');
         webview.setAttribute('allowRunningInsecureContent', '');
 
-        // Comment out auto DevTools opening
-        // webview.addEventListener('dom-ready', () => {
-        //     webview.openDevTools();
-        // });
+        // Handle messages from webview
+        webview.addEventListener('message', (event) => {
+            if (event.data.type === 'external-link') {
+                console.log('Received external link:', event.data.url);
+                electronAPI.openExternal(event.data.url);
+            }
+        });
 
-        // Navigate to new URL when Enter key is pressed
+        // Basic URL bar functionality
         urlbar.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 let url = urlbar.value;
@@ -135,7 +143,7 @@
             }
         });
 
-        // Update URL bar when webview navigates to new page
+        // Update URL bar when webview navigates
         webview.addEventListener('did-navigate', (e) => {
             urlbar.value = e.url;
         });
