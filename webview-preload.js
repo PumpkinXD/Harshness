@@ -5,6 +5,12 @@ window.addEventListener('click', async (e) => {
   if (link && link.target === '_blank') {
     const url = link.href;
     
+    // Skip processing if it's not a valid URL or if it's a voice channel
+    if (!url || url === 'javascript:void(0)' || link.getAttribute('data-list-item-id')?.includes('channels___')) {
+      console.log('Skipping non-URL or voice channel link');
+      return;
+    }
+    
     // Check if it's a Discord link
     if (url.includes('discord.com') ||url.includes('discord.gg') || url.includes('discordapp.com')) {
       console.log('Discord link detected, allowing default behavior:', url);

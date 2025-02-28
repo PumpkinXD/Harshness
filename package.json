@@ -1,10 +1,11 @@
 {
-  "name": "Harshness",
+  "name": "harshness",
   "version": "0.1.0",
-  "description": "A DEMO",
+  "description": "Harshness",
   "main": "main.js",
   "scripts": {
-    "start": "electron . --enable-features=UseOzonePlatform --ozone-platform-hint=auto --enable-wayland-ime",
+    "start": "electron .",
+    "startWayland": "electron . --enable-features=UseOzonePlatform --ozone-platform-hint=auto --enable-wayland-ime",
     "build": "electron-builder"
   },
   "repository": "https://github.com/PumpkinXD/Harshness",
